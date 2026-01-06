@@ -1,0 +1,38 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.betterx.betterend.mixin.common",
+  "compatibilityLevel": "JAVA_12",
+  "mixins": [
+    "CauldronFluidContentMixin",
+    "ChorusFlowerBlockMixin",
+    "ChorusPlantBlockMixin",
+    "ChorusPlantFeatureMixin",
+    "CraftingMenuMixin",
+    "EndCityFeatureMixin",
+    "EndDragonFightMixin",
+    "EnderManMixin",
+    "EndPlatformFeatureMixin",
+    "EndPodiumFeatureMixin",
+    "EndPortalBlockMixin",
+    "EndSpikeMixin",
+    "LevelMixin",
+    "LivingEntityMixin",
+    "NoiseBasedChunkGeneratorAccessor",
+    "NoiseChunkAccessor",
+    "NoiseChunkMixin",
+    "NoiseGeneratorSettingsMixin",
+    "NoiseInterpolatorAccessor",
+    "PlayerAdvancementsMixin",
+    "PlayerMixin",
+    "RegistrationEventsMixin",
+    "ServerLevelMixin",
+    "SlimeMixin",
+    "SpikeFeatureMixin",
+    "WorldGenRegionMixin",
+    "portal.EntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
