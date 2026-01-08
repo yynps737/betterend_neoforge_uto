@@ -65,13 +65,13 @@ public class EndBiomes {
 
     public static void register() {
         BiomeCodecRegistry.register(BetterEnd.C.mk("biome"), EndBiome.KEY_CODEC);
-        BiomeCodecRegistry.register(BetterEnd.C.mk("cave_biome"), EndCaveBiome.KEY_CODEC);
-        BiomeCodecRegistry.register(BetterEnd.C.mk("empty_aurora_cave_biome"), EmptyAuroraCaveBiome.KEY_CODEC);
-        BiomeCodecRegistry.register(BetterEnd.C.mk("empty_end_cave_biome"), EmptyEndCaveBiome.KEY_CODEC);
-        BiomeCodecRegistry.register(BetterEnd.C.mk("empty_smaragdant_cave_biome"), EmptySmaragdantCaveBiome.KEY_CODEC);
-        BiomeCodecRegistry.register(BetterEnd.C.mk("jade_cave_biome"), JadeCaveBiome.KEY_CODEC);
-        BiomeCodecRegistry.register(BetterEnd.C.mk("lush_aurora_cave_biome"), LushAuroraCaveBiome.KEY_CODEC);
-        BiomeCodecRegistry.register(BetterEnd.C.mk("lush_smaragdant_cave_biome"), LushSmaragdantCaveBiome.KEY_CODEC);
+        BiomeCodecRegistry.register(BetterEnd.C.mk("cave_biome"), EndCaveBiome.KEY_CODEC, EndCaveBiome.NETWORK_KEY_CODEC);
+        BiomeCodecRegistry.register(BetterEnd.C.mk("empty_aurora_cave_biome"), EmptyAuroraCaveBiome.KEY_CODEC, EmptyAuroraCaveBiome.NETWORK_KEY_CODEC);
+        BiomeCodecRegistry.register(BetterEnd.C.mk("empty_end_cave_biome"), EmptyEndCaveBiome.KEY_CODEC, EmptyEndCaveBiome.NETWORK_KEY_CODEC);
+        BiomeCodecRegistry.register(BetterEnd.C.mk("empty_smaragdant_cave_biome"), EmptySmaragdantCaveBiome.KEY_CODEC, EmptySmaragdantCaveBiome.NETWORK_KEY_CODEC);
+        BiomeCodecRegistry.register(BetterEnd.C.mk("jade_cave_biome"), JadeCaveBiome.KEY_CODEC, JadeCaveBiome.NETWORK_KEY_CODEC);
+        BiomeCodecRegistry.register(BetterEnd.C.mk("lush_aurora_cave_biome"), LushAuroraCaveBiome.KEY_CODEC, LushAuroraCaveBiome.NETWORK_KEY_CODEC);
+        BiomeCodecRegistry.register(BetterEnd.C.mk("lush_smaragdant_cave_biome"), LushSmaragdantCaveBiome.KEY_CODEC, LushSmaragdantCaveBiome.NETWORK_KEY_CODEC);
 
         WorldLifecycle.SERVER_LEVEL_READY.subscribe(EndBiomes::onServerLevelReady);
     }
