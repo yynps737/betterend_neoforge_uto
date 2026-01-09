@@ -175,6 +175,10 @@ public class PortalBuilder {
         PoiManager poiManager = this.targetLevel.getPoiManager();
         poiManager.ensureLoadedAndValid(this.targetLevel, blockPos, SPIRAL_SEARCH_RADIUS);
 
+        if (EndPoiTypes.ETERNAL_PORTAL == null) {
+            return Optional.empty();
+        }
+
         Optional<BlockPos> oPos = EndPoiTypes.ETERNAL_PORTAL.findPoiAround(
                 this.targetLevel,
                 blockPos,

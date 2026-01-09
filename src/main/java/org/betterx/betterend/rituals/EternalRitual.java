@@ -360,6 +360,7 @@ public class EternalRitual {
     }
 
     private void removePortal(Level world, BlockPos center) {
+        if (world == null || center == null) return;
         BlockPos framePos = center.below();
         Direction moveDir = Direction.Axis.X == axis ? Direction.NORTH : Direction.EAST;
         PortalBuilder.FRAME_POSITIONS.forEach(point -> {

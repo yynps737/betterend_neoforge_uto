@@ -5,13 +5,13 @@ import org.betterx.betterend.interfaces.BETargetChecker;
 import org.betterx.betterend.mixin.common.NoiseBasedChunkGeneratorAccessor;
 import org.betterx.betterend.mixin.common.NoiseChunkAccessor;
 import org.betterx.betterend.mixin.common.NoiseInterpolatorAccessor;
+import org.betterx.betterend.mixin.common.BlueprintModdedBiomeSourceAccessor;
 import org.betterx.betterend.noise.OpenSimplexNoise;
 import org.betterx.wover.biome.api.BiomeManager;
 import org.betterx.wover.block.api.BlockHelper;
 import org.betterx.wover.common.generator.api.biomesource.BiomeSourceWithConfig;
 import org.betterx.wover.generator.api.biomesource.WoverBiomeData;
 import org.betterx.wover.generator.api.biomesource.end.WoverEndConfig;
-import org.betterx.wover.generator.impl.biomesource.end.WoverEndBiomeSource;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -56,11 +56,7 @@ public class TerrainGenerator {
     private static Sampler sampler;
 
     public static void initNoise(long seed, BiomeSource biomeSource, Sampler sampler) {
-        if (biomeSource instanceof BiomeSourceWithConfig bcl) {
-            if (bcl.getBiomeSourceConfig() instanceof WoverEndConfig config)
-                TerrainGenerator.config = config;
-        }
-
+        TerrainGenerator.config = resolveEndConfig(biomeSource);
         if (config == null) {
             throw new IllegalStateException("Biome source config is not set");
         }
@@ -75,6 +71,27 @@ public class TerrainGenerator {
         TerrainGenerator.biomeSource = biomeSource;
         TerrainGenerator.sampler = sampler;
 
+    }
+
+    private static @Nullable WoverEndConfig resolveEndConfig(BiomeSource biomeSource) {
+        BiomeSource source = biomeSource;
+        for (int depth = 0; depth < 8 && source != null; depth++) {
+            if (source instanceof BiomeSourceWithConfig bcl) {
+                if (bcl.getBiomeSourceConfig() instanceof WoverEndConfig resolved) {
+                    return resolved;
+                }
+            }
+            if (source instanceof BlueprintModdedBiomeSourceAccessor accessor) {
+                BiomeSource original = accessor.be_getOriginalSource();
+                if (original == null || original == source) {
+                    break;
+                }
+                source = original;
+                continue;
+            }
+            break;
+        }
+        return null;
     }
 
     public static void fillTerrainDensity(double[] buffer, int posX, int posZ, int scaleXZ, int scaleY, int maxHeight) {
@@ -239,10 +256,11 @@ public class TerrainGenerator {
             if (chunkGenerator instanceof NoiseBasedChunkGenerator) {
                 Holder<NoiseGeneratorSettings> sHolder = ((NoiseBasedChunkGeneratorAccessor) chunkGenerator)
                         .be_getSettings();
-                if (chunkGenerator.getBiomeSource() instanceof WoverEndBiomeSource bcl) {
+                WoverEndConfig endConfig = resolveEndConfig(chunkGenerator.getBiomeSource());
+                if (endConfig != null) {
                     BETargetChecker.class
                             .cast(sHolder.value())
-                            .be_setTarget(bcl.getBiomeSourceConfig().generatorVersion == WoverEndConfig.EndBiomeGeneratorType.PAULEVS);
+                            .be_setTarget(endConfig.generatorVersion == WoverEndConfig.EndBiomeGeneratorType.PAULEVS);
                 } else {
                     BETargetChecker.class
                             .cast(sHolder.value())
