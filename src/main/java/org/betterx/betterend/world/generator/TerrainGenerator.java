@@ -5,7 +5,6 @@ import org.betterx.betterend.interfaces.BETargetChecker;
 import org.betterx.betterend.mixin.common.NoiseBasedChunkGeneratorAccessor;
 import org.betterx.betterend.mixin.common.NoiseChunkAccessor;
 import org.betterx.betterend.mixin.common.NoiseInterpolatorAccessor;
-import org.betterx.betterend.mixin.common.BlueprintModdedBiomeSourceAccessor;
 import org.betterx.betterend.noise.OpenSimplexNoise;
 import org.betterx.wover.biome.api.BiomeManager;
 import org.betterx.wover.block.api.BlockHelper;
@@ -32,6 +31,7 @@ import com.google.common.collect.Maps;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
@@ -81,11 +81,8 @@ public class TerrainGenerator {
                     return resolved;
                 }
             }
-            if (source instanceof BlueprintModdedBiomeSourceAccessor accessor) {
-                BiomeSource original = accessor.be_getOriginalSource();
-                if (original == null || original == source) {
-                    break;
-                }
+            BiomeSource original = BlueprintCompat.unwrapOriginalSource(source);
+            if (original != null && original != source) {
                 source = original;
                 continue;
             }
@@ -318,6 +315,51 @@ public class TerrainGenerator {
                             : interpolator.be_getSlice1())[cellXZ];
                     fillTerrainDensity(ds, x, z, sizeXZ, sizeY, noiseSettings.height());
                 }
+            }
+        }
+    }
+
+    private static final class BlueprintCompat {
+        private static final String CLASS_NAME = "com.teamabnormals.blueprint.common.world.modification.ModdedBiomeSource";
+        private static final String FIELD_NAME = "originalSource";
+        private static volatile boolean initialized;
+        private static volatile Class<?> moddedBiomeSourceClass;
+        private static volatile Field originalSourceField;
+
+        private BlueprintCompat() {
+        }
+
+        @Nullable
+        static BiomeSource unwrapOriginalSource(BiomeSource source) {
+            ensureInitialized();
+            if (moddedBiomeSourceClass == null || originalSourceField == null) {
+                return null;
+            }
+            if (!moddedBiomeSourceClass.isInstance(source)) {
+                return null;
+            }
+            try {
+                Object original = originalSourceField.get(source);
+                return original instanceof BiomeSource biomeSource ? biomeSource : null;
+            } catch (IllegalAccessException ignored) {
+                return null;
+            }
+        }
+
+        private static void ensureInitialized() {
+            if (initialized) {
+                return;
+            }
+            initialized = true;
+            try {
+                Class<?> clazz = Class.forName(CLASS_NAME, false, BlueprintCompat.class.getClassLoader());
+                Field field = clazz.getDeclaredField(FIELD_NAME);
+                field.setAccessible(true);
+                moddedBiomeSourceClass = clazz;
+                originalSourceField = field;
+            } catch (ClassNotFoundException | NoSuchFieldException ignored) {
+                moddedBiomeSourceClass = null;
+                originalSourceField = null;
             }
         }
     }

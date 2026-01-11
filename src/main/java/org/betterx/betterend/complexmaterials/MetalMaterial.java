@@ -222,17 +222,20 @@ public class MetalMaterial implements MaterialManager.Material {
         forgedPlate = EndItems.registerEndItem(name + "_forged_plate", new ModelProviderItem(newItemSettings()));
         helmet = EndItems.registerEndItem(
                 name + "_helmet",
-                new EndArmorItem(armor, ArmorSlot.HELMET_SLOT, newItemSettings())
+                new EndArmorItem(armor, ArmorSlot.HELMET_SLOT, newArmorSettings(ArmorSlot.HELMET_SLOT, armor))
         );
         chestplate = EndItems.registerEndItem(
                 name + "_chestplate",
-                new EndArmorItem(armor, ArmorSlot.CHESTPLATE_SLOT, newItemSettings())
+                new EndArmorItem(armor, ArmorSlot.CHESTPLATE_SLOT, newArmorSettings(ArmorSlot.CHESTPLATE_SLOT, armor))
         );
         leggings = EndItems.registerEndItem(
                 name + "_leggings",
-                new EndArmorItem(armor, ArmorSlot.LEGGINGS_SLOT, newItemSettings())
+                new EndArmorItem(armor, ArmorSlot.LEGGINGS_SLOT, newArmorSettings(ArmorSlot.LEGGINGS_SLOT, armor))
         );
-        boots = EndItems.registerEndItem(name + "_boots", new EndArmorItem(armor, ArmorSlot.BOOTS_SLOT, newItemSettings()));
+        boots = EndItems.registerEndItem(
+                name + "_boots",
+                new EndArmorItem(armor, ArmorSlot.BOOTS_SLOT, newArmorSettings(ArmorSlot.BOOTS_SLOT, armor))
+        );
 
         anvilBlock = EndBlocks.registerBlock(
                 name + "_anvil",
@@ -244,6 +247,14 @@ public class MetalMaterial implements MaterialManager.Material {
 
     private Properties newItemSettings() {
         return itemSettings.get();
+    }
+
+    private Properties newArmorSettings(ArmorSlot slot, ArmorTier tier) {
+        var values = tier.getValues(slot);
+        if (values == null) {
+            throw new IllegalArgumentException("Values for " + slot + " are not defined for " + tier);
+        }
+        return newItemSettings().durability(slot.armorType.getDurability(values.durability()));
     }
 
     @Override

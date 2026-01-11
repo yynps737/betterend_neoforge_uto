@@ -19,6 +19,7 @@ import org.betterx.betterend.item.material.EndToolMaterial;
 import org.betterx.betterend.item.tool.EndHammerItem;
 import org.betterx.betterend.item.tool.EndPickaxe;
 import org.betterx.betterend.util.DebugHelpers;
+import org.betterx.wover.complex.api.equipment.ArmorSlot;
 import org.betterx.wover.item.api.ItemRegistry;
 import org.betterx.wover.tag.api.predefined.CommonItemTags;
 
@@ -97,7 +98,8 @@ public class EndItems {
             new BaseArmorItem(
                     EndArmorMaterial.AETERNIUM,
                     ArmorItem.Type.HELMET,
-                    makeEndItemSettings().fireResistant()
+                    EndArmorItem.createDefaultEndArmorSettings(ArmorSlot.HELMET_SLOT, EndArmorTier.AETERNIUM)
+                                .fireResistant()
             )
     );
     public static final Item AETERNIUM_CHESTPLATE = registerEndItem(
@@ -105,7 +107,8 @@ public class EndItems {
             new BaseArmorItem(
                     EndArmorMaterial.AETERNIUM,
                     ArmorItem.Type.CHESTPLATE,
-                    makeEndItemSettings().fireResistant()
+                    EndArmorItem.createDefaultEndArmorSettings(ArmorSlot.CHESTPLATE_SLOT, EndArmorTier.AETERNIUM)
+                                .fireResistant()
             )
     );
     public static final Item AETERNIUM_LEGGINGS = registerEndItem(
@@ -113,7 +116,8 @@ public class EndItems {
             new BaseArmorItem(
                     EndArmorMaterial.AETERNIUM,
                     ArmorItem.Type.LEGGINGS,
-                    makeEndItemSettings().fireResistant()
+                    EndArmorItem.createDefaultEndArmorSettings(ArmorSlot.LEGGINGS_SLOT, EndArmorTier.AETERNIUM)
+                                .fireResistant()
             )
     );
     public static final Item AETERNIUM_BOOTS = registerEndItem(
@@ -121,7 +125,8 @@ public class EndItems {
             new BaseArmorItem(
                     EndArmorMaterial.AETERNIUM,
                     ArmorItem.Type.BOOTS,
-                    makeEndItemSettings().fireResistant()
+                    EndArmorItem.createDefaultEndArmorSettings(ArmorSlot.BOOTS_SLOT, EndArmorTier.AETERNIUM)
+                                .fireResistant()
             )
     );
     public static final Item CRYSTALITE_HELMET = registerEndItem("crystalite_helmet", new CrystaliteHelmet());
