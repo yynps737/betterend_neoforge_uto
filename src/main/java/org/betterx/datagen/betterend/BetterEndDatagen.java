@@ -53,13 +53,8 @@ public class BetterEndDatagen extends WoverDataGenEntryPoint {
         globalPack.addProvider(EndChestLootTableProvider::new);
         globalPack.addProvider(EndBlockLootTableProvider::new);
         globalPack.addProvider(EndModelProvider::new);
-
-
-        globalPack.callOnInitializeDatapack((event, packOutput, location) -> {
-            if (location == null) {
-                event.addProvider(new EndAdvancementDataProvider(packOutput, event.getLookupProvider()));
-            }
-        });
+        globalPack.addProvider(modCore -> (output, registries, existingFileHelper) ->
+                new EndAdvancementDataProvider(output, registries));
 
         //Add providers for the byg integration
 //        addDatapack(BetterEnd.BYG_ADDITIONS_PACK)

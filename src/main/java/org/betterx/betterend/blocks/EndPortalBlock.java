@@ -1,7 +1,9 @@
 package org.betterx.betterend.blocks;
 
 import org.betterx.bclib.client.render.BCLRenderLayer;
+import org.betterx.bclib.interfaces.BlockColorProvider;
 import org.betterx.bclib.interfaces.CustomColorProvider;
+import org.betterx.bclib.interfaces.ItemColorProvider;
 import org.betterx.bclib.interfaces.RenderLayerProvider;
 import org.betterx.betterend.BetterEnd;
 import org.betterx.betterend.advancements.BECriteria;
@@ -10,8 +12,6 @@ import org.betterx.betterend.registry.EndParticles;
 import org.betterx.betterend.registry.EndPortals;
 
 import net.minecraft.BlockUtil;
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
@@ -125,12 +125,12 @@ public class EndPortalBlock extends NetherPortalBlock implements RenderLayerProv
     }
 
     @Override
-    public BlockColor getProvider() {
+    public BlockColorProvider getProvider() {
         return (state, world, pos, tintIndex) -> EndPortals.getColor(state.getValue(PORTAL));
     }
 
     @Override
-    public ItemColor getItemProvider() {
+    public ItemColorProvider getItemProvider() {
         return (stack, tintIndex) -> EndPortals.getColor(0);
     }
 

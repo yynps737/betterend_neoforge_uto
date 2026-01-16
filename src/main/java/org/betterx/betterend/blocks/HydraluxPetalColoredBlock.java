@@ -1,6 +1,8 @@
 package org.betterx.betterend.blocks;
 
+import org.betterx.bclib.interfaces.BlockColorProvider;
 import org.betterx.bclib.interfaces.CustomColorProvider;
+import org.betterx.bclib.interfaces.ItemColorProvider;
 import org.betterx.bclib.util.BlocksHelper;
 import org.betterx.betterend.BetterEnd;
 import org.betterx.betterend.client.models.EndModels;
@@ -8,8 +10,6 @@ import org.betterx.wover.block.api.model.BlockModelProvider;
 import org.betterx.wover.block.api.model.WoverBlockModelGenerators;
 import org.betterx.wover.block.api.model.WoverBlockModelGeneratorsAccess;
 
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.data.models.model.TextureSlot;
@@ -25,12 +25,12 @@ public class HydraluxPetalColoredBlock extends HydraluxPetalBlock implements Cus
     }
 
     @Override
-    public BlockColor getProvider() {
+    public BlockColorProvider getProvider() {
         return (state, world, pos, tintIndex) -> BlocksHelper.getBlockColor(this);
     }
 
     @Override
-    public ItemColor getItemProvider() {
+    public ItemColorProvider getItemProvider() {
         return (stack, tintIndex) -> BlocksHelper.getBlockColor(this);
     }
 

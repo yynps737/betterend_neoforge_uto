@@ -1,5 +1,5 @@
 {
-  "parent": "betterend:enter_end",
+  "parent": "betterend:portal",
   "criteria": {
     "turn_on": {
       "trigger": "betterend:portal_on"

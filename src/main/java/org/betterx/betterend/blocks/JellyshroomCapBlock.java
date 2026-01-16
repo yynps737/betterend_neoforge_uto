@@ -2,7 +2,9 @@ package org.betterx.betterend.blocks;
 
 import org.betterx.bclib.client.models.ModelsHelper;
 import org.betterx.bclib.client.render.BCLRenderLayer;
+import org.betterx.bclib.interfaces.BlockColorProvider;
 import org.betterx.bclib.interfaces.CustomColorProvider;
+import org.betterx.bclib.interfaces.ItemColorProvider;
 import org.betterx.bclib.interfaces.RenderLayerProvider;
 import org.betterx.bclib.interfaces.RuntimeBlockModelProvider;
 import org.betterx.bclib.util.MHelper;
@@ -10,8 +12,6 @@ import org.betterx.betterend.client.models.Patterns;
 import org.betterx.betterend.noise.OpenSimplexNoise;
 import org.betterx.ui.ColorUtil;
 
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
@@ -88,7 +88,7 @@ public class JellyshroomCapBlock extends SlimeBlock implements RenderLayerProvid
     }
 
     @Override
-    public BlockColor getProvider() {
+    public BlockColorProvider getProvider() {
         return (state, world, pos, tintIndex) -> {
             float delta = (float) state.getValue(COLOR) / 7F;
             int r = Mth.floor(Mth.lerp(delta, colorStart.getX() / 255F, colorEnd.getX() / 255F) * 255F);
@@ -99,7 +99,7 @@ public class JellyshroomCapBlock extends SlimeBlock implements RenderLayerProvid
     }
 
     @Override
-    public ItemColor getItemProvider() {
+    public ItemColorProvider getItemProvider() {
         return (stack, tintIndex) -> {
             return coloritem;
         };

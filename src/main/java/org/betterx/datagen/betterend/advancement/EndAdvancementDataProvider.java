@@ -72,23 +72,20 @@ public class EndAdvancementDataProvider extends AdvancementDataProvider {
                 .requirements(Strategy.OR)
                 .build();
 
-        ResourceLocation portalParent = enterEnd;
-        Holder<Structure> portalHolder = EndStructures.ETERNAL_PORTAL.getHolder(structures);
-        if (portalHolder != null) {
-            portalParent = AdvancementManager.Builder
-                    .create(BetterEnd.C.mk("portal"))
-                    .parent(enterEnd)
-                    .startDisplay(EndBlocks.ETERNAL_PEDESTAL)
-                    .frame(AdvancementType.GOAL)
-                    .endDisplay()
-                    .addAtStructureCriterion("eternal_portal", portalHolder)
-                    .requirements(Strategy.OR)
-                    .build();
-        }
+        Holder<Structure> portalHolder = structures.getOrThrow(EndStructures.ETERNAL_PORTAL.key());
+        ResourceLocation portal = AdvancementManager.Builder
+                .create(BetterEnd.C.mk("portal"))
+                .parent(enterEnd)
+                .startDisplay(EndBlocks.ETERNAL_PEDESTAL)
+                .frame(AdvancementType.GOAL)
+                .endDisplay()
+                .addAtStructureCriterion("eternal_portal", portalHolder)
+                .requirements(Strategy.OR)
+                .build();
 
         ResourceLocation portalOn = AdvancementManager.Builder
                 .create(BetterEnd.C.mk("portal_on"))
-                .parent(portalParent)
+                .parent(portal)
                 .startDisplay(EndItems.ETERNAL_CRYSTAL)
                 .endDisplay()
                 .addCriterion("turn_on", BECriteria.PORTAL_ON_TRIGGER)
@@ -127,18 +124,16 @@ public class EndAdvancementDataProvider extends AdvancementDataProvider {
                     .build();
 
 
-            Holder<Structure> villageHolder = EndStructures.END_VILLAGE.getHolder(structures);
-            if (villageHolder != null) {
-                ResourceLocation village = AdvancementManager.Builder
-                        .create(BetterEnd.C.mk("village"))
-                        .parent(allTheBiomes)
-                        .startDisplay(EndBlocks.TENANEA.getBlock(WoodSlots.DOOR))
-                        .frame(AdvancementType.GOAL)
-                        .endDisplay()
-                        .addAtStructureCriterion("end_village", villageHolder)
-                        .requirements(Strategy.OR)
-                        .build();
-            }
+            Holder<Structure> villageHolder = structures.getOrThrow(EndStructures.END_VILLAGE.key());
+            ResourceLocation village = AdvancementManager.Builder
+                    .create(BetterEnd.C.mk("village"))
+                    .parent(allTheBiomes)
+                    .startDisplay(EndBlocks.TENANEA.getBlock(WoodSlots.DOOR))
+                    .frame(AdvancementType.GOAL)
+                    .endDisplay()
+                    .addAtStructureCriterion("end_village", villageHolder)
+                    .requirements(Strategy.OR)
+                    .build();
         }
 
         ResourceLocation allElytras = AdvancementManager.Builder

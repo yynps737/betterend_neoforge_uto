@@ -1,10 +1,10 @@
 package org.betterx.betterend.particle;
 
 import org.betterx.bclib.interfaces.CustomColorProvider;
+import org.betterx.bclib.interfaces.BlockColorProvider;
 import org.betterx.bclib.util.MHelper;
 import org.betterx.betterend.registry.EndBlocks;
 
-import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;
@@ -16,7 +16,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ParticleTenaneaPetal extends TextureSheetParticle {
-    private static BlockColor provider;
+    private static BlockColorProvider provider;
 
     private double preVX;
     private double preVY;
