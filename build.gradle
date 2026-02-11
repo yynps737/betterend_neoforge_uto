@@ -91,6 +91,10 @@ dependencies {
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
+    // JEI - compile-only API so the mod works without JEI installed
+    compileOnly "mezz.jei:jei-1.21.1-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
+
     // Load BetterX libraries from local libs/ directory (uto26 custom builds)
     implementation files("libs/bclib-${project.bclib_version}-${project.build_tag}.jar")
     implementation files("libs/wunderlib-${project.wunderlib_version}-${project.build_tag}.jar")
