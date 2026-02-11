@@ -1,7 +1,7 @@
 // #### Custom Settings ####
 
 //Change the next line to disable local library loading
-def allowLocalLibUse = true
+def allowLocalLibUse = false
 
 //When true, the local libraries is also used in commandline builds
 def allowLocalLibInConsoleMode = true

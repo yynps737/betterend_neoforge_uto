@@ -34,7 +34,7 @@ import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
-@EventBusSubscriber(modid = BetterEnd.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = BetterEnd.MOD_ID, value = Dist.CLIENT)
 public class BetterEndClient {
     private static final ModelResourceLocation CHECK_FLOWER_ID = ModelResourceLocation.inventory(
             ResourceLocation.withDefaultNamespace("chorus_flower")

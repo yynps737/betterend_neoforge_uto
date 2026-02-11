@@ -91,29 +91,10 @@ dependencies {
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
-    println "Using local BCLib: ${local_bclib}"
-    if (local_bclib) {
-        implementation project(path: ":BCLib", configuration: 'dev')
-    } else {
-        implementation "org.betterx:bclib:${project.bclib_version}"
-    }
-
-    println "Using local WunderLib: ${local_wunderlib}"
-    if (local_wunderlib) {
-        implementation project(path: ":wunderlib", configuration: 'dev')
-    } else if (local_wover) {
-        implementation "de.ambertation:wunderlib:${project.wunderlib_version}"
-    }
-
-    println "Using local WorldWeaver: ${local_wover}"
-    if (local_wover) {
-        implementation project(path: ":WorldWeaver", configuration: 'dev')
-        gradle.knownWoverModules.each {
-            implementation project(path: ":WorldWeaver:$it", configuration: 'dev')
-        }
-    } else if (local_bclib) {
-        implementation "org.betterx:worldweaver:${project.wover_version}"
-    }
+    // Load BetterX libraries from local libs/ directory (uto26 custom builds)
+    implementation files("libs/bclib-${project.bclib_version}-${project.build_tag}.jar")
+    implementation files("libs/wunderlib-${project.wunderlib_version}-${project.build_tag}.jar")
+    implementation files("libs/worldweaver-${project.wover_version}-${project.build_tag}.jar")
 }
 
 
@@ -342,10 +323,11 @@ tasks.register("generateMixinMappings") {
 
 tasks.register("fixMixinRefmap") {
     def refmapFile = layout.buildDirectory.file("resources/main/${refmapName}")
-    inputs.file(refmapFile).optional(true)
-    outputs.file(refmapFile)
+    inputs.files(refmapFile).optional()
+    outputs.files(refmapFile)
     dependsOn(tasks.named("processResources"))
     dependsOn(tasks.named("compileJava"))
+    mustRunAfter(tasks.named("syncGeneratedResources"))
     doLast {
         def file = refmapFile.get().asFile
         if (!file.exists()) {
@@ -418,42 +400,20 @@ jar {
     dependsOn(tasks.named("fixMixinRefmap"))
     from "LICENSE"
     from "LICENSE.ASSETS"
+    archiveFileName = "${archivesBaseName}-${version}-${project.build_tag}.jar"
 }
 
-// Collect built jars for BetterEnd and its local BetterX libraries into one folder
+// Collect built jar into dist folder
 def distDir = new File(rootProject.projectDir.parentFile, "betterx-dist")
-def modrinthModsDir = new File("C:/Users/Redmi/AppData/Roaming/ModrinthApp/profiles/1.21.1 Server ArchiTech/mods")
 tasks.register("copyDistJars", Copy) {
-    dependsOn(
-            tasks.named("jar"),
-            project(":BCLib").tasks.named("jar"),
-            project(":WorldWeaver").tasks.named("jar"),
-            project(":wunderlib").tasks.named("jar")
-    )
+    dependsOn(tasks.named("jar"))
     from(tasks.named("jar"))
-    from(project(":BCLib").tasks.named("jar"))
-    from(project(":WorldWeaver").tasks.named("jar"))
-    from(project(":wunderlib").tasks.named("jar"))
     into(distDir)
-}
-
-tasks.register("copyModrinthJars", Copy) {
-    dependsOn(
-            tasks.named("jar"),
-            project(":BCLib").tasks.named("jar"),
-            project(":WorldWeaver").tasks.named("jar"),
-            project(":wunderlib").tasks.named("jar")
-    )
-    from(tasks.named("jar"))
-    from(project(":BCLib").tasks.named("jar"))
-    from(project(":WorldWeaver").tasks.named("jar"))
-    from(project(":wunderlib").tasks.named("jar"))
-    into(modrinthModsDir)
 }
 
 tasks.named("build") {
     if (!simpleBuildRequested) {
-        finalizedBy("copyDistJars", "copyModrinthJars")
+        finalizedBy("copyDistJars")
     }
 }
 
