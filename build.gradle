@@ -53,6 +53,10 @@ neoForge {
                     "--existing", file("src/main/resources").toString()
             )
         }
+        gameTestServer {
+            server()
+            systemProperty "neoforge.enabledGameTestNamespaces", modId
+        }
     }
     mods {
         "${modId}" {

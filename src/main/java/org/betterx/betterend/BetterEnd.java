@@ -23,10 +23,18 @@ import org.betterx.wover.core.api.ModCore;
 import org.betterx.wover.generator.api.biomesource.end.BiomeDecider;
 import org.betterx.wover.state.api.WorldConfig;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 @Mod(BetterEnd.MOD_ID)
@@ -80,6 +88,16 @@ public class BetterEnd {
             BetterEndDatagen datagen = new BetterEndDatagen();
             modBus.addListener(datagen::onGatherData);
         }
+
+        // Register GameTest classes (dev environment only)
+        if (!net.neoforged.fml.loading.FMLLoader.isProduction()) {
+            modBus.addListener(net.neoforged.neoforge.event.RegisterGameTestsEvent.class, event -> {
+                event.register(org.betterx.betterend.gametest.BetterEndGameTests.class);
+            });
+            NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.event.server.ServerStartingEvent.class,
+                    event -> registerGameTestTemplates(event.getServer()));
+        }
+
         initialize();
     }
 
@@ -140,5 +158,37 @@ public class BetterEnd {
         if (event.getRegistryKey().equals(net.minecraft.core.registries.Registries.FEATURE)) {
             EndFeatures.onRegister(event);
         }
+    }
+
+    private static void registerGameTestTemplates(MinecraftServer server) {
+        StructureTemplateManager mgr = server.getStructureManager();
+        registerEmptyTemplate(mgr, "empty_3x3", 3, 3, 3);
+        registerEmptyTemplate(mgr, "empty_10x10", 10, 10, 10);
+        registerEmptyTemplate(mgr, "empty_20x20", 20, 20, 20);
+    }
+
+    private static void registerEmptyTemplate(StructureTemplateManager mgr, String name, int sx, int sy, int sz) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+        StructureTemplate template = mgr.getOrCreate(id);
+
+        CompoundTag nbt = new CompoundTag();
+        nbt.putInt("DataVersion", 3955);
+
+        ListTag sizeTag = new ListTag();
+        sizeTag.add(IntTag.valueOf(sx));
+        sizeTag.add(IntTag.valueOf(sy));
+        sizeTag.add(IntTag.valueOf(sz));
+        nbt.put("size", sizeTag);
+
+        ListTag palette = new ListTag();
+        CompoundTag airBlock = new CompoundTag();
+        airBlock.putString("Name", "minecraft:air");
+        palette.add(airBlock);
+        nbt.put("palette", palette);
+
+        nbt.put("blocks", new ListTag());
+        nbt.put("entities", new ListTag());
+
+        template.load(BuiltInRegistries.BLOCK.asLookup(), nbt);
     }
 }
