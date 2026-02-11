@@ -400,6 +400,11 @@ tasks.matching { it.name == "createMinecraftArtifacts" }.configureEach {
     doNotTrackState("Work around Gradle 8.8 state tracking for moddev task outputs.")
 }
 
+// Ensure dev run tasks (client/server) depend on fixMixinRefmap
+tasks.matching { it.name.contains("net.neoforged.devlaunch.Main.main") }.configureEach {
+    dependsOn(tasks.named("fixMixinRefmap"))
+}
+
 jar {
     dependsOn(tasks.named("fixMixinRefmap"))
     from "LICENSE"
